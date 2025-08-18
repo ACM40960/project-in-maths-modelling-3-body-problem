@@ -69,11 +69,12 @@ Asteroid impacts are a low-probability but high-consequence hazard. Our goal is 
 
 ```plaintext
 asteroid-impact-risk/
-├── AsteroidTest2.ipynb   # Jupyter Notebook with simulations & plots
-├── A0 Poster.pdf         # Research poster summarizing project
-├── data/                 # Orbital parameters (if included)
-├── results/              # Generated figures & outputs
-└── README.md             # Documentation
+├── AsteroidTest2.ipynb                      # Jupyter Notebook with simulations & plots
+├── A0 Poster.pdf                            # Research poster summarizing project
+├── collision_no_jupiter.csv                 # Simulation output with no Jupiter influence
+├── collision_with_jupiter.csv               # Simulation output with Jupiter influence
+├── requirements.txt                         # Required Libraries
+└── README.md                                # Documentation
 ```
 
 ---
