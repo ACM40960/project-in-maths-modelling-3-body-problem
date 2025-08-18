@@ -69,13 +69,16 @@ Asteroid impacts are a low-probability but high-consequence hazard. Our goal is 
 
 ## 🧠 Theory & Equations
 
-> This section distills the **Theory and Equations** from the A0 poster and formalizes them for the README.
+Gravitational Potential at any given point is determined by the cumulative effect of all planetary masses. The instantaneous gravitational field vector at observer’s location is given by: 
 
-### Gravitational Potential and Field (Restricted N‑Body)
-Let $\mathbf{x}(t)\$ be the asteroid position and \(\mathbf{r}_i(t)\) the position of body *i* with mass \(M_i\). With finite propagation speed \(c\), the **retarded time** for body *i* is
-\[
-t_r^{(i)}\;=\;t\;-\;\frac{\left\|\,\mathbf{x}(t) - \mathbf{r}_i\!\left(t_r^{(i)}\right)\,\right\|}{c}.
-\]
+$$
+\vec{g}(\vec{r}_{\text{observer}}, t) = -\sum_{i\in \mathcal{P}}\frac{GM_i}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t)\right|^2}\cdot\frac{\vec r_{\text{observer}}(t)-\vec r_i(t)}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t)\right|}
+$$
+Where:
+$$
+    \begin{align*}        &\vec{g}(\vec{r}_{\text{observer}}, t) \text{ is the gravitational field vector at the observer's position at time } t \\        &G \text{ is the gravitational constant} \\        &M_i \text{ is the mass of the } i\text{-th planet} \\        &\vec{r}_{\text{observer}}(t) \text{ is the position vector of the observer at time } t \\        &\vec{r}_i(t) \text{ is the position vector of the } i\text{-th planet at time } t \\        &\mathcal{P} \text{ is the set of all planets contributing to the field}    \end{align*}
+$$
+
 
 The **gravitational potential** at \(\mathbf{x},t\) is
 \[
