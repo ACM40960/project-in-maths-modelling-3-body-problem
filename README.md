@@ -71,22 +71,26 @@ Asteroid impacts are a low-probability but high-consequence hazard. Our goal is 
 
 Gravitational Potential at any given point is determined by the cumulative effect of all planetary masses. The instantaneous gravitational field vector at observer’s location is given by: 
 
-$$\vec{g}(\vec{r}_{\text{observer}},t)=-\sum_{i\in \mathcal{P}}$$
-
-
 $$\vec{g}(\vec{r}_{\text{observer}}, t) = -\sum_{i\in \mathcal{P}}\frac{GM_i}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t)\right|^2}\cdot\frac{\vec r_{\text{observer}}(t)-\vec r_i(t)}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t)\right|}$$
+
 Where:
+
 $$\begin{align*}        &\vec{g}(\vec{r}_{\text{observer}}, t) \text{ is the gravitational field vector at the observer's position at time } t \\        &G \text{ is the gravitational constant} \\        &M_i \text{ is the mass of the } i\text{-th planet} \\        &\vec{r}_{\text{observer}}(t) \text{ is the position vector of the observer at time } t \\        &\vec{r}_i(t) \text{ is the position vector of the } i\text{-th planet at time } t \\        &\mathcal{P} \text{ is the set of all planets contributing to the field}    \end{align*}$$
 
+However, gravitational influence does not propagate instantaneously. Instead it travels at the finite speed of light(c) to account for this, we introduce  retarded time which reflects the time at which the original gravitational influence originated
 
-The **gravitational potential** at \(\mathbf{x},t\) is
-\[
-\Phi(\mathbf{x},t)\;=\;-\sum_{i=1}^{N} \frac{G M_i}{\left\|\,\mathbf{x}-\mathbf{r}_i\!\left(t_r^{(i)}\right)\,\right\|},
-\]
-and the **gravitational field** is
-\[
-\mathbf{g}(\mathbf{x},t)\;=\;-\nabla\Phi(\mathbf{x},t)\;=\;\sum_{i=1}^{N} G M_i\, \frac{\mathbf{r}_i\!\left(t_r^{(i)}\right)-\mathbf{x}}{\left\|\,\mathbf{r}_i\!\left(t_r^{(i)}\right)-\mathbf{x}\,\right\|^{3}}.
-\]
+$$ \vec{g}(\vec{r}_{\text{observer}}, t) = -\sum_{i\in \mathcal{P}}\frac{GM_i}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t_{\text{ret}})\right|^2}\cdot\frac{\vec r_{\text{observer}}(t)-\vec r_i(t_{\text{ret}})}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t_{\text{ret}})\right|}
+$$
+
+Where:
+
+$$ \begin{align*}
+        &t_{\text{ret}} \text{ is the retarded time given implicitly by:} \\
+        &t_{\text{ret}} = t - \frac{\left|\vec r_{\text{observer}}(t)-\vec r_i(t_{\text{ret}})\right|}{c}
+    \end{align*}
+$$
+
+This formulation ensures causality by incorporating the finite time it takes for the gravitational effects to propogate
 
 ### Equations of Motion (Test Particle)
 \[
@@ -94,28 +98,23 @@ and the **gravitational field** is
 \dot{\mathbf{v}}(t)=\mathbf{g}(\mathbf{x}(t),t).
 \]
 
-### Planet Ephemerides (Circular‑Orbit Approximation)
-For each body *i*,
-\[
-\mathbf{r}_i(t)=R_i\begin{bmatrix}
-\cos(\omega_i t+\phi_i)\\
-\sin(\omega_i t+\phi_i)\\
-0
-\end{bmatrix}.
-\]
+### Equations for trahectory over a short time
+$$
+\begin{aligned}\vec v_{i+1}&=\vec v_i+\vec a_i(\vec s_i)\cdot t\\\vec s_{i+1}&=\vec v_i\cdot t+\frac{\vec a_i(\vec s_i)\cdot t^2}{2}+\vec s_i
+\end{aligned}
+$$
+The above equations are used to iteratively to find the path
 
 ### Monte Carlo Initialization
-\[
+$$
 \mathbf{x}_0\sim\mathcal{N}(\bar{\mathbf{x}}_0,\,\Sigma_x),\qquad
 \mathbf{v}_0\sim\mathcal{N}(\bar{\mathbf{v}}_0,\,\Sigma_v).
-\]
+$$
 
 ### Numerical Integration & Termination
 - Fixed step \(\Delta t\approx 100\,\mathrm{s}\) with velocity/acceleration held constant within a step (semi‑implicit Euler).  
 - **Stop conditions:** Earth impact (radius threshold), or end‑time \(T\).  
 - **Recorded per run:** impact flag, minimum distances to Earth/Jupiter, and time of closest approach.
-
-*Notes from the poster:* finite‑speed gravity via retarded time ensures causality; for short interactions the delay is often negligible, but we include it for completeness.  
 
 ---
 
