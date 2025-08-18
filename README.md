@@ -83,15 +83,21 @@ asteroid-impact-risk/
 Ensure you have Python **3.10+** and Jupyter installed.
 
 ```bash
-git clone <your-repo-link>
-cd asteroid-impact-risk
+git clone https://github.com/ACM40960/project-in-maths-modelling-3-body-problem
+cd project-in-maths-modelling-3-body-problem
 pip install -r requirements.txt
 ```
 
 Typical dependencies:
-- numpy  
+- numpy
 - matplotlib  
-- jupyter  
+- numba
+- matplotlib
+- pandas
+- astroquery
+- astropy
+- scipy
+  
 
 ---
 
