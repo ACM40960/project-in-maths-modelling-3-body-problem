@@ -71,7 +71,7 @@ Asteroid impacts are a low-probability but high-consequence hazard. Our goal is 
 
 Gravitational Potential at any given point is determined by the cumulative effect of all planetary masses. The instantaneous gravitational field vector at observer’s location is given by: 
 
-$$\vec{g}(\vec{r}_{\text{observer}}, t) = -\sum_{i\in \mathcal{P}}\frac{GM_i}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t)\right|^2}\cdot\frac{\vec r_{\text{observer}}(t)-\vec r_i(t)}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t)\right|}$$
+$$\vec{g}(\vec{r}_{\text{observer}}, t) \text{=} -\sum_{i\in \mathcal{P}}\frac{GM_i}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t)\right|^2}\cdot\frac{\vec r_{\text{observer}}(t)-\vec r_i(t)}{\left|\vec r_{\text{observer}}(t)-\vec r_i(t)\right|}$$
 
 Where:
 
