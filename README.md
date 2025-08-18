@@ -72,7 +72,7 @@ Asteroid impacts are a low-probability but high-consequence hazard. Our goal is 
 > This section distills the **Theory and Equations** from the A0 poster and formalizes them for the README.
 
 ### Gravitational Potential and Field (Restricted N‑Body)
-Let \(\mathbf{x}(t)\) be the asteroid position and \(\mathbf{r}_i(t)\) the position of body *i* with mass \(M_i\). With finite propagation speed \(c\), the **retarded time** for body *i* is
+Let $\mathbf{x}(t)\$ be the asteroid position and \(\mathbf{r}_i(t)\) the position of body *i* with mass \(M_i\). With finite propagation speed \(c\), the **retarded time** for body *i* is
 \[
 t_r^{(i)}\;=\;t\;-\;\frac{\left\|\,\mathbf{x}(t) - \mathbf{r}_i\!\left(t_r^{(i)}\right)\,\right\|}{c}.
 \]
