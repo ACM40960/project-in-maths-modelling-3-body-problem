@@ -22,15 +22,17 @@ This project investigates the **orbital dynamics and Earth-impact risk of astero
    - [Motivation](#motivation)  
    - [Methodology](#methodology)  
    - [Model Assumptions](#model-assumptions)
-3. [Theory & Equations](#-theory--equations)  
-4. [Project Structure](#project-structure)  
-5. [Installation](#installation)  
-6. [Running the Notebook](#running-the-notebook)  
-7. [Results](#results)  
-8. [Poster](#poster)  
-9. [Future Work](#future-work)  
-10. [License](#license)  
-11. [Contact](#contact)  
+3. [Theory & Equations](#-theory--equations)
+4. [Notebook Flow (End‑to‑End)](#-notebook-flow-endtoend)
+5. [Core Functions (from the Notebook)](#️-core-functions-from-the-notebook) 
+6. [Project Structure](#project-structure)  
+7. [Installation](#installation)  
+8. [Running the Notebook](#running-the-notebook)  
+9. [Results](#results)  
+10. [Poster](#poster)  
+11. [Future Work](#future-work)  
+12. [License](#license)  
+13. [Contact](#contact)  
 
 ---
 
@@ -115,6 +117,52 @@ $$
 - Fixed step \(\Delta t\approx 100\,\mathrm{s}\) with velocity/acceleration held constant within a step (semi‑implicit Euler).  
 - **Stop conditions:** Earth impact (radius threshold), or end‑time \(T\).  
 - **Recorded per run:** impact flag, minimum distances to Earth/Jupiter, and time of closest approach.
+
+---
+
+## 🧭 Notebook Flow (End‑to‑End)
+
+1. **Fetch ephemerides** with `process_targets(targets, date_str)` using JPL Horizons for the selected date.  
+2. **Transform reference frame** via `transform_to_rotated_heliocentric_frame(...)` so Earth lies at **(1 AU, 0, 0)**, the x‑axis points from Sun→Earth, and z‑axis is normal to Earth’s orbital plane.  
+3. **Set baseline state** `observer_pos_init`, `observer_vel_init` (derived from the chosen asteroid/Earth state on the date).  
+4. **Sample initial conditions** with `generate_initial_conditions(n, sigma_pos, sigma_vel)` to create a cloud of starting positions/velocities.  
+5. **Propagate each particle** via `simulate_one(s0, v0, t_max, jupiter_flag)` using a restricted N‑body model (Sun+Earth, optionally **Jupiter**) and **retarded time** in `grav_field(...)`. Adaptive timesteps are chosen by `find_dt(...)`.  
+6. **Record outcomes** (collision type, min distances) with `monte_carlo_sim_from_initials(...)` → **CSV**.  
+7. **Analyze results** with `summarize_results(...)`, visualize distributions and confidence intervals with `plot_min_distance_histograms(...)`, and test robustness with `sensitivity_plot(...)` for **pos/vel perturbations** with/without Jupiter.
+
+**CSV schema written by the notebook**
+```
+ParticleID, InitialSpeed(m/s), InitialPosX(m), InitialPosY(m), InitialPosZ(m),
+CollisionType, MinEarthDistance(m), MinJupiterDistance(m)
+```
+Where `CollisionType`: 0=no collision, 1=Earth, 2=Sun, 3=Jupiter.
+
+---
+
+## 🛠️ Core Functions (from the Notebook)
+
+> Below is a concise reference to the manually‑written functions used throughout `AsteroidTest2.ipynb`.
+
+### Ephemerides & Frames
+- `process_targets(targets: dict, date_str: str) -> dict` — Fetches heliocentric states via **astroquery.jplhorizons**/**astropy** and converts them to the rotated heliocentric frame; returns `{name: {'pos_km', 'vel_ms'}}`.
+- `transform_to_rotated_heliocentric_frame(pos_obj, vel_obj, pos_earth, vel_earth)` — Builds an orthonormal basis from Earth’s position/velocity; rotates Sun‑centred states into this frame and translates so Earth sits at `(1 AU, 0, 0)`.
+- `normalize(v)` — Unit‑vector helper.  
+- `signed_angle(a, b, axis)` / `signed_angle_2d(a, b)` — Signed angle between vectors (3D about `axis`, or 2D).
+
+### Celestial Mechanics (model)
+- `r_p(t)` — Earth’s **circular** heliocentric position at time `t` with angular speed `ω`.
+- `j_p(t)` — Jupiter’s circular orbit (with inclination/ascending‑node rotations applied).
+- `retarded_time(t, observer_pos, tol=1e-6, max_iter=100, jupiter=0)` — Fixed‑point solve for **retarded time** so gravity respects finite propagation speed `c` (Earth or Jupiter based on the flag).
+- `grav_field(t, x1, jupiter=0)` — Superposed gravitational acceleration from **Sun + Earth (+ Jupiter if requested)** at position `x1`, using **retarded positions**.
+- `find_dt(v, s, velocity_threshold=30000.0, small_dt=100.0, large_dt=1000.0, t=0.0)` — Simple **adaptive timestep**: smaller steps when moving fast or near Earth; larger otherwise.
+
+### Simulation & Monte Carlo
+- `simulate_one(s0, v0, t_max=T*2, jupiter_flag=0)` — Semi‑implicit Euler propagation with adaptive `dt`. Returns trajectory sample, `CollisionType`, and **minimum distances** to Earth/Jupiter.
+- `generate_initial_conditions(n_particles, sigma_pos, sigma_vel)` — Draws `n_particles` initial states from normal distributions centred at the baseline `observer_pos_init`/`observer_vel_init`.
+- `monte_carlo_sim_from_initials(s0_list, v0_list, t_max_years, output_file, jupiter_flag=0)` — Runs the ensemble, logs per‑particle outcomes to CSV (see schema above).
+- `summarize_results(output_file="collision_data.csv")` — Prints **counts and rates** for Earth/Sun/Jupiter collisions.
+- `plot_min_distance_histograms(csv_file="collision_data.csv", bins=50, confidence=0.95)` — Plots histograms of minimum distances and reports **mean ± CI** (Student‑t).
+- `sensitivity_plot(observer_pos_init, observer_vel_init, deltas, perturb_type='pos', t_max_years=5.0, jupiter_flag_vals=[0,1])` — Sweeps multiplicative perturbations in **position** or **velocity**; produces a log‑x plot of minimum Earth distance, comparing **with vs without Jupiter**.
 
 ---
 
