@@ -146,5 +146,5 @@ This project is licensed under the **MIT License**.
 ## 📬 Contact
 
 For questions:  
-- [suriya.raman@ucdconnect.ie](mailto:suriya.raman@ucdconnect.ie)  
+- [suriya.soundararajansundar@ucdconnect.ie](mailto:suriya.soundararajansundar@ucdconnect.ie)  
 - [jonas.nadar@ucdconnect.ie](mailto:jonas.nadar@ucdconnect.ie)  
