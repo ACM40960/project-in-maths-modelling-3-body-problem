@@ -17,7 +17,7 @@ This project investigates the **orbital dynamics and Earth-impact risk of astero
 
 ## 📖 Table of Contents
 
-1. [Abstract](#-abstract)  
+1. [Abstract](#🛰️-abstract)  
 2. [Project Description](#project-description)  
    - [Motivation](#motivation)  
    - [Methodology](#methodology)  
